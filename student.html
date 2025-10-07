@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Timetable - CTMS</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <h1 class="dashboard-title">Student Timetable</h1>
+            <div class="user-info">
+                <div class="user-avatar">👨‍🎓</div>
+                <span id="studentInfo">Student</span>
+                <button class="logout-btn" onclick="window.location.href='/login.html'">Back to Login</button>
+            </div>
+        </header>
+
+        <div class="dashboard-content">
+            <div class="timetable-container">
+                <div class="timetable-header">
+                    <h2 class="timetable-title" id="timetableTitle">Your Timetable</h2>
+                    <p class="timetable-info" id="timetableInfo">Loading timetable...</p>
+                </div>
+
+                <div id="timetableContent" class="timetable">
+                    <div class="loading-message">
+                        <div class="spinner"></div>
+                        <p>Loading your timetable...</p>
+                    </div>
+                </div>
+
+                <div class="actions-section" style="margin-top: 30px;">
+                    <h3>Actions</h3>
+                    <div class="actions-grid">
+                        <button class="action-btn" onclick="window.print()">
+                            📄 Print Timetable
+                        </button>
+                        <button class="action-btn" onclick="window.location.href='/login.html'">
+                            🔄 View Different Branch/Semester
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .loading-message {
+            text-align: center;
+            padding: 50px;
+            color: #666;
+        }
+
+        .loading-message .spinner {
+            margin: 0 auto 20px;
+        }
+
+        @media print {
+            .dashboard-header,
+            .actions-section,
+            .logout-btn {
+                display: none !important;
+            }
+
+            body {
+                background: white !important;
+            }
+
+            .dashboard-container {
+                background: white !important;
+            }
+
+            .timetable-container {
+                box-shadow: none !important;
+                padding: 0 !important;
+            }
+        }
+    </style>
+
+    <script src="js/common.js"></script>
+    <script src="js/student.js"></script>
+</body>
+</html>

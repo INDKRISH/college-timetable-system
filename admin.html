@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - CTMS</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <h1 class="dashboard-title">Admin Dashboard</h1>
+            <div class="user-info">
+                <div class="user-avatar">👨‍💼</div>
+                <span id="adminName">Administrator</span>
+                <button class="logout-btn">Logout</button>
+            </div>
+        </header>
+
+        <div class="dashboard-content">
+            <!-- Dashboard Statistics -->
+            <div class="stats-grid" id="dashboardStats">
+                <div class="stat-card">
+                    <div class="stat-icon">👩‍🏫</div>
+                    <div class="stat-number" id="teachersCount">-</div>
+                    <div class="stat-label">Teachers</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📚</div>
+                    <div class="stat-number" id="coursesCount">-</div>
+                    <div class="stat-label">Courses</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🏫</div>
+                    <div class="stat-number" id="roomsCount">-</div>
+                    <div class="stat-label">Rooms</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-number" id="batchesCount">-</div>
+                    <div class="stat-label">Batches</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📅</div>
+                    <div class="stat-number" id="scheduledCount">-</div>
+                    <div class="stat-label">Scheduled Classes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⏳</div>
+                    <div class="stat-number" id="pendingRequestsCount">-</div>
+                    <div class="stat-label">Pending Requests</div>
+                </div>
+            </div>
+
+            <!-- Navigation Tabs -->
+            <div class="actions-section">
+                <h3>Management</h3>
+                <div class="actions-grid">
+                    <button class="action-btn" onclick="showSection('timetable')">
+                        📅 View Timetables
+                    </button>
+                    <button class="action-btn" onclick="generateTimetable()">
+                        ⚡ Generate New Timetable
+                    </button>
+                    <button class="action-btn" onclick="showSection('teachers')">
+                        👩‍🏫 Manage Teachers
+                    </button>
+                    <button class="action-btn" onclick="showSection('courses')">
+                        📚 Manage Courses
+                    </button>
+                    <button class="action-btn" onclick="showSection('requests')">
+                        📝 Change Requests (${pendingCount})
+                    </button>
+                    <button class="action-btn" onclick="window.print()">
+                        🖨️ Print Reports
+                    </button>
+                </div>
+            </div>
+
+            <!-- Timetable Section -->
+            <div id="timetableSection" class="timetable-container hidden">
+                <div class="timetable-header">
+                    <h2 class="timetable-title">All Timetables</h2>
+                    <p class="timetable-info">View and manage all scheduled classes</p>
+                </div>
+
+                <div id="timetableContent" class="timetable">
+                    <div class="loading-message">
+                        <div class="spinner"></div>
+                        <p>Loading timetables...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Teachers Management Section -->
+            <div id="teachersSection" class="timetable-container hidden">
+                <div class="timetable-header">
+                    <h2 class="timetable-title">Teacher Management</h2>
+                    <p class="timetable-info">Add, edit, and manage teacher information</p>
+                </div>
+
+                <div class="actions-grid mb-20">
+                    <button class="action-btn" onclick="showAddTeacherForm()">
+                        ➕ Add New Teacher
+                    </button>
+                </div>
+
+                <!-- Add Teacher Form (hidden by default) -->
+                <div id="addTeacherForm" class="hidden" style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                    <h4>Add New Teacher</h4>
+                    <form id="teacherForm" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; align-items: end;">
+                        <div class="form-group">
+                            <label for="teacherName">Name:</label>
+                            <input type="text" id="teacherName" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="teacherEmail">Email:</label>
+                            <input type="email" id="teacherEmail" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="teacherPhone">Phone:</label>
+                            <input type="tel" id="teacherPhone" name="phone">
+                        </div>
+                        <div class="form-group">
+                            <label for="maxHoursDay">Max Hours/Day:</label>
+                            <input type="number" id="maxHoursDay" name="max_hours_per_day" value="6" min="1" max="10">
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <button type="submit" class="action-btn">Save Teacher</button>
+                            <button type="button" class="action-btn" onclick="hideAddTeacherForm()" style="background: #6c757d; margin-left: 10px;">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="teachersContent">
+                    <div class="loading-message">
+                        <div class="spinner"></div>
+                        <p>Loading teachers...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Courses Management Section -->
+            <div id="coursesSection" class="timetable-container hidden">
+                <div class="timetable-header">
+                    <h2 class="timetable-title">Course Management</h2>
+                    <p class="timetable-info">Add, edit, and manage course information</p>
+                </div>
+
+                <div id="coursesContent">
+                    <div class="loading-message">
+                        <div class="spinner"></div>
+                        <p>Loading courses...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Change Requests Section -->
+            <div id="requestsSection" class="timetable-container hidden">
+                <div class="timetable-header">
+                    <h2 class="timetable-title">Change Requests</h2>
+                    <p class="timetable-info">Review and process teacher change requests</p>
+                </div>
+
+                <div id="requestsContent">
+                    <div class="loading-message">
+                        <div class="spinner"></div>
+                        <p>Loading change requests...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .management-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .management-table th,
+        .management-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .management-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .management-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .btn-small {
+            padding: 5px 10px;
+            font-size: 0.8rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 0 2px;
+        }
+
+        .btn-edit {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-delete {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-approve {
+            background: #007bff;
+            color: white;
+        }
+
+        .btn-reject {
+            background: #6c757d;
+            color: white;
+        }
+
+        .request-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .request-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .request-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .generating-message {
+            background: #d1ecf1;
+            color: #0c5460;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            text-align: center;
+            border: 1px solid #bee5eb;
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .actions-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .management-table {
+                font-size: 0.9rem;
+            }
+
+            #teacherForm {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+    <script>
+        let pendingCount = 0;
+    </script>
+    <script src="js/common.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>
